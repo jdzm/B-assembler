@@ -20,6 +20,7 @@ rule select_longread:
         """
         python scripts/SelectLongRead.py {input.raw} {params} {output.long} {output.short}
         """
+
 rule fq_to_fa:
     input:
         "output/filter_length.fq"
@@ -31,6 +32,7 @@ rule fq_to_fa:
         """
         python scripts/FqToFa.py {input} {output}
         """
+
 ##longRead_correct
 par=""
 readType=config['readtype']
@@ -43,10 +45,10 @@ rule short_to_long:
     input:
         long = "output/filter_length.fa",
         short = "output/left_filter_length.fq"
-    threads:
-        config["threads"]
     output:
         "output/short_to_long.sam"
+    threads:
+        config["threads"]
     params:
         type=par
     shell:
@@ -59,10 +61,10 @@ rule longread_polish:
         short = 'output/left_filter_length.fq',
         sam = 'output/short_to_long.sam'
     threads:
-        1
+        config["threads"] // 2
     output:
         "output/long_read_corrected.fasta"
     shell:
         """
-        racon {input.short} {input.sam} {input.long} > {output}
+        racon --threads {threads} {input.short} {input.sam} {input.long} > {output}
         """
