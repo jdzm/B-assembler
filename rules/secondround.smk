@@ -49,10 +49,10 @@ resize=int(int(config['genomesize'])*0.4)
 rule second_assembly:
     input:
         "output/EndReads_dupl_remove.fa"
-    threads:
-        config["threads"]
     output:
         "output/secondrun/assembly.fasta"
+    threads:
+        config["threads"]
     params:
         dir="output/secondrun/",
         type=par,
@@ -64,10 +64,10 @@ rule second_assembly:
 rule select_longContig:
     input:
         "output/secondrun/assembly.fasta"
-    threads:
-        1
     output:
         "output/secondrunOneline.fa"
+    threads:
+        1
     shell:
         """
         python scripts/PrintOneLine.py {input} {output}

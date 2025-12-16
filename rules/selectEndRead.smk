@@ -12,6 +12,7 @@ rule endReads_select:
         """
         python scripts/ExtractEndReads.py {input.fa} {input.bam} {output.begin} {output.end}
         """
+
 rule merge_end_reads:
     input:
         "output/EndAlign.fq",
@@ -25,6 +26,7 @@ rule merge_end_reads:
         """
         cat {input} > {output.Endfq} && python scripts/FqToFa.py {output.Endfq} {output.Endfa}
         """
+
 rule remove_dupl:
     input:
         "output/EndReads.fa"

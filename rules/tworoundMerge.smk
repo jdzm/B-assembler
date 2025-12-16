@@ -10,6 +10,7 @@ rule tworun_align:
         """
         minimap2 -cx asm20 -t {threads} {input.fir} {input.sec} > {output}
         """
+
 rule merge:
     input:
         paf="output/first_second.paf",

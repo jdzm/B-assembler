@@ -21,7 +21,9 @@ rule first_assemble:
         type=par 
     shell:
         """
-        flye {params.type} {input} --min-overlap 3000 --genome-size {params.genoSize} --threads {threads} --out-dir {params.dir}
+        flye {params.type} {input} --min-overlap 3000 \
+            --genome-size {params.genoSize} \
+            --threads {threads} --out-dir {params.dir}
         """
 ##extract plasmid sequence
 rule select_longestContig:
