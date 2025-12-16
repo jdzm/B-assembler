@@ -55,7 +55,7 @@ rule short_to_long:
         type=par
     shell:
         """
-        minimap2 -ax {params.type} {input.long} {input.short} > {output}
+        minimap2 -ax {params.type} -t {threads} {input.long} {input.short} > {output}
         """
 rule longread_polish:
     input:

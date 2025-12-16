@@ -8,7 +8,7 @@ rule tworun_align:
         config["threads"]
     shell:
         """
-        minimap2 -cx asm20 {input.fir} {input.sec} > {output}
+        minimap2 -cx asm20 -t {threads} {input.fir} {input.sec} > {output}
         """
 rule merge:
     input:

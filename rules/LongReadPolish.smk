@@ -18,7 +18,7 @@ rule polish_round1:
         type=par
     shell:
         """
-        minimap2 -ax {params.type} {input.assembly} {input.read} > output/rawfq_merged.sam && racon {input.read} output/rawfq_merged.sam {input.assembly} > {output}
+        minimap2 -ax {params.type} -t {threads} {input.assembly} {input.read} > output/rawfq_merged.sam && racon {input.read} output/rawfq_merged.sam {input.assembly} > {output}
         """
 rule polish_round2:
     input:
@@ -31,7 +31,7 @@ rule polish_round2:
     params:
         type=par
     shell:
-        "minimap2 -ax {params.type} {input.assembly} {input.read} > output/rawfq_merged_2.sam && racon {input.read} output/rawfq_merged_2.sam {input.assembly} > {output}"
+        "minimap2 -ax {params.type} -t {threads} {input.assembly} {input.read} > output/rawfq_merged_2.sam && racon {input.read} output/rawfq_merged_2.sam {input.assembly} > {output}"
 
 rule polish_round3:
     input:
@@ -44,7 +44,7 @@ rule polish_round3:
     params:
         type=par
     shell:
-        "minimap2 -ax {params.type} {input.assembly} {input.read} > output/rawfq_merged_3.sam && racon {input.read} output/rawfq_merged_3.sam {input.assembly} > {output}"
+        "minimap2 -ax {params.type} -t {threads} {input.assembly} {input.read} > output/rawfq_merged_3.sam && racon {input.read} output/rawfq_merged_3.sam {input.assembly} > {output}"
 
 rule polish_round4:
     input:
@@ -57,6 +57,6 @@ rule polish_round4:
     params:
         type=par
     shell:
-        "minimap2 -ax {params.type} {input.assembly} {input.read} > output/rawfq_merged_4.sam && racon {input.read} output/rawfq_merged_4.sam {input.assembly} > {output}"
+        "minimap2 -ax {params.type} -t {threads} {input.assembly} {input.read} > output/rawfq_merged_4.sam && racon {input.read} output/rawfq_merged_4.sam {input.assembly} > {output}"
 
 

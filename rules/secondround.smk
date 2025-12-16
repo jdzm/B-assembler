@@ -59,7 +59,7 @@ rule second_assembly:
         size=resize
     shell:
         """
-        flye {params.type} {input} --min-overlap 3000 --genome-size {params.size} --out-dir {params.dir}
+        flye {params.type} {input} --min-overlap 3000 --genome-size {params.size} --threads {threads} --out-dir {params.dir}
         """
 rule select_longContig:
     input:

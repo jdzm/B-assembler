@@ -20,7 +20,7 @@ rule polish_round1:
 
     shell:
         """
-        flye --polish-target {input.assembly} {params.type} {input.read} --iterations 2 --out-dir {params.dir} 
+        flye --polish-target {input.assembly} {params.type} {input.read} --iterations 2 --threads {threads} --out-dir {params.dir} 
         """
 
 rule rename:
