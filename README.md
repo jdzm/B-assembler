@@ -54,6 +54,7 @@ conda activate B-assembler
 ## Write your configuation
 ###Provide sequence data in config.yaml file
 ```
+cp config-template.yaml config.yaml
 vi config.yaml
 ```
 

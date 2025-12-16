@@ -4,6 +4,9 @@ final/
 tmp/
 input/
 
+# Project config file
+config.yaml
+
 # Snakemake folder
 .snakemake/
 
