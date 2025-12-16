@@ -17,7 +17,6 @@ rule polish_round1:
     params:
         dir="output/",
         type=par
-
     shell:
         """
         flye --polish-target {input.assembly} {params.type} {input.read} --iterations 2 --threads {threads} --out-dir {params.dir} 
