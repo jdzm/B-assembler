@@ -1,0 +1,16 @@
+# Output files
+results/
+final/
+tmp/
+input/
+
+# Snakemake folder
+.snakemake/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
