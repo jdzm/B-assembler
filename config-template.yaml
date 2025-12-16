@@ -14,3 +14,6 @@ readtype: ONT  #nanopore:ONT, pacbio:pb
 # PATH
 sourceDir: PathToSourceDir
 outputDir: PathToOutputDir
+
+# Cores to use in pipeline
+threads: 24
