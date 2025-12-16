@@ -13,7 +13,11 @@ rule bwa_1:
     shell:
         """
         bwa index {input.long};
-        bwa mem -t 8 {input.long} {input.short_1} {input.short_2} |samtools view -Sb - | samtools sort - -o {output.bam};
+        
+        bwa mem -t {threads} {input.long} {input.short_1} {input.short_2} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam}
+
         samtools index {output.bam}
         """
 
@@ -47,7 +51,11 @@ rule bwa_2:
     shell:
         """
         bwa index {input.long};
-        bwa mem -t 8 {input.long} {input.short_1} {input.short_2} |samtools view -Sb - | samtools sort - -o {output.bam};
+        
+        bwa mem -t {threads} {input.long} {input.short_1} {input.short_2} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam}
+        
         samtools index {output.bam}
         """
 rule pilon_polish_2:
@@ -80,7 +88,11 @@ rule bwa_3:
     shell:
         """
         bwa index {input.long};
-        bwa mem -t 8 {input.long} {input.short_1} {input.short_2} |samtools view -Sb - | samtools sort - -o {output.bam};
+        
+        bwa mem -t {threads} {input.long} {input.short_1} {input.short_2} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam}
+
         samtools index {output.bam}
         """
 rule pilon_polish_3:
@@ -113,9 +125,13 @@ rule bwa_4:
     shell:
         """
         bwa index {input.long};
-        bwa mem -t 8 {input.long} {input.short_1} {input.short_2} |samtools view -Sb - | samtools sort - -o {output.bam};
+
+        bwa mem -t {threads} {input.long} {input.short_1} {input.short_2} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam}
+
         samtools index {output.bam}
-        """ 
+        """
 
 rule pilon_polish_4:
     input:

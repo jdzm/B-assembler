@@ -49,6 +49,10 @@ rule rawfq_firstrun:
         type=mini
     shell:
         """
-        minimap2 -ax {params.type} -t {threads} {input.firstrun} {input.rawfq} | samtools view -Sb - | samtools sort - -o {output.bam} && samtools index {output.bam} > {output.bai}
+        minimap2 -ax {params.type} -t {threads} {input.firstrun} {input.rawfq} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam} 
+            
+        samtools index {output.bam} > {output.bai}
         """
 

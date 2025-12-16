@@ -27,10 +27,10 @@ rule select_longread:
 rule fq_to_fa:
     input:
         "output/filter_length.fq"
-    threads:
-        1
     output:
         "output/filter_length.fa"
+    threads:
+        1
     shell:
         """
         python scripts/FqToFa.py {input} {output}
@@ -42,16 +42,22 @@ rule bwa:
         short_1 = config['illumina']['R1'],
         short_2 = config['illumina']['R2']
     output:
-    threads:
-        config["threads"] // 2
         bam="output/short_read_long-srt.bam",
         bai="output/short_read_long-srt.bam.bai"
+    threads:
+        config["threads"]
     conda:
         'envs/bwa.yaml'
     shell:
-        'bwa index {input.long};'
-        'bwa mem -t 8 {input.long} {input.short_1} {input.short_2} | samtools view -Sb - |  samtools sort - -o {output.bam};'
-        'samtools index {output.bam}'
+        """
+        bwa index {input.long};
+        
+        bwa mem -t {threads} {input.long} {input.short_1} {input.short_2} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam}
+        
+        samtools index {output.bam}
+        """
 
 rule longread_polish:
     input:
