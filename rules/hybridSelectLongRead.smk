@@ -63,14 +63,17 @@ rule longread_polish:
     input:
         long = 'output/filter_length.fa',
         bam = 'output/short_read_long-srt.bam'
-    threads:
-        1
     output:
         "output/long_read_corrected.fasta"
+    threads:
+        config ["threads"] // 2
     params:
         output_prefix = 'long_read_corrected',
         output_dir = 'output'
     shell:
         """
-        java -Xmx10G -jar script/pilon-1.23.jar --genome {input.long} --frags {input.bam} --fix all --output {params.output_prefix} --outdir {params.output_dir}
+        java -Xmx10G -jar script/pilon-1.23.jar --threads {threads} \
+            --genome {input.long} --frags {input.bam} \
+            --fix all --output {params.output_prefix} \
+            --outdir {params.output_dir}
         """

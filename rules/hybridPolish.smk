@@ -28,13 +28,16 @@ rule pilon_polish_1:
     output:
         "output/merge_pilon_corrected_1.fasta"
     threads:
-        1
+        config ["threads"] // 2
     params:
         output_prefix = 'merge_pilon_corrected_1',
         output_dir = 'output'
     shell:
         """
-        java -Xmx10G -jar script/pilon-1.23.jar --genome {input.long} --frags {input.bam} --fix all --output {params.output_prefix} --outdir {params.output_dir} 
+        java -Xmx10G -jar script/pilon-1.23.jar --threads {threads} \
+            --genome {input.long} --frags {input.bam} \
+            --fix all --output {params.output_prefix} \
+            --outdir {params.output_dir} 
         """
 rule bwa_2:
     input:
@@ -65,13 +68,16 @@ rule pilon_polish_2:
     output:
         "output/merge_pilon_corrected_2.fasta"
     threads:
-        1
+        config ["threads"] // 2
     params:
         output_prefix = 'merge_pilon_corrected_2',
         output_dir = 'output'
     shell:
         """
-        java -Xmx10G -jar script/pilon-1.23.jar --genome {input.long} --frags {input.bam} --fix all --output {params.output_prefix} --outdir {params.output_dir}
+        java -Xmx10G -jar script/pilon-1.23.jar --threads {threads} \
+            --genome {input.long} --frags {input.bam} \
+            --fix all --output {params.output_prefix} \
+            --outdir {params.output_dir}
         """
 rule bwa_3:
     input:
@@ -108,8 +114,12 @@ rule pilon_polish_3:
         output_dir = 'output'
     shell:
         """
-        java -Xmx10G -jar script/pilon-1.23.jar --genome {input.long} --frags {input.bam} --fix all --output {params.output_prefix} --outdir {params.output_dir}
+        java -Xmx10G -jar script/pilon-1.23.jar --threads {threads} \
+            --genome {input.long} --frags {input.bam} \
+            --fix all --output {params.output_prefix} \
+            --outdir {params.output_dir}
         """
+
 rule bwa_4:
     input:
         long = "output/merge_pilon_corrected_3.fasta",
@@ -140,11 +150,14 @@ rule pilon_polish_4:
     output:
         "output/merge_corrected_4.fasta"
     threads:
-        1
+        config["threads"] // 2
     params:
         output_prefix = 'merge_corrected_4',
         output_dir = 'output'
     shell:
         """
-        java -Xmx10G -jar script/pilon-1.23.jar --genome {input.long} --frags {input.bam} --fix all --output {params.output_prefix} --outdir {params.output_dir}
+        java -Xmx10G -jar script/pilon-1.23.jar --threads {threads} \
+            --genome {input.long} --frags {input.bam} \
+            --fix all --output {params.output_prefix} \
+            --outdir {params.output_dir}
         """
