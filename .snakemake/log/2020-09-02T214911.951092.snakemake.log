@@ -1,3 +1,0 @@
-WorkflowError in line 8 of /data/user/huangf/Arginini/original/snakemake/snakefile:
-Failed to open /data/user/huangf/Arginini/original/snakemake/selectLongRead.smk.
-  File "/data/user/huangf/Arginini/original/snakemake/snakefile", line 8, in <module>
