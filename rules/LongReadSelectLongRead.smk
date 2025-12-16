@@ -12,6 +12,8 @@ rule select_longread:
     output:
         long="output/filter_length.fq",
         short="output/left_filter_length.fq"
+    threads:
+        1
     params:
         config['genomesize']
     shell:
@@ -23,6 +25,8 @@ rule fq_to_fa:
         "output/filter_length.fq"
     output:
         "output/filter_length.fa"
+    threads:
+        1
     shell:
         """
         python scripts/FqToFa.py {input} {output}
@@ -39,6 +43,8 @@ rule short_to_long:
     input:
         long = "output/filter_length.fa",
         short = "output/left_filter_length.fq"
+    threads:
+        config["threads"]
     output:
         "output/short_to_long.sam"
     params:
@@ -52,6 +58,8 @@ rule longread_polish:
         long = 'output/filter_length.fa',
         short = 'output/left_filter_length.fq',
         sam = 'output/short_to_long.sam'
+    threads:
+        1
     output:
         "output/long_read_corrected.fasta"
     shell:

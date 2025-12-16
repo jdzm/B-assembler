@@ -6,6 +6,8 @@ rule bwa_1:
     output:
         bam="output/short_merge_srt_1.bam",
         bai="output/short_merge_srt_1.bam.bai"
+    threads:
+        config["threads"]
     conda:
         'envs/bwa.yaml'
     shell:
@@ -21,6 +23,8 @@ rule pilon_polish_1:
         bam = 'output/short_merge_srt_1.bam'
     output:
         "output/merge_pilon_corrected_1.fasta"
+    threads:
+        1
     params:
         output_prefix = 'merge_pilon_corrected_1',
         output_dir = 'output'
@@ -36,6 +40,8 @@ rule bwa_2:
     output:
         bam="output/short_merge_srt_2.bam",
         bai="output/short_merge_srt_2.bam.bai"
+    threads:
+        config["threads"]
     conda:
         'envs/bwa.yaml'
     shell:
@@ -50,6 +56,8 @@ rule pilon_polish_2:
         bam = 'output/short_merge_srt_2.bam'
     output:
         "output/merge_pilon_corrected_2.fasta"
+    threads:
+        1
     params:
         output_prefix = 'merge_pilon_corrected_2',
         output_dir = 'output'
@@ -65,6 +73,8 @@ rule bwa_3:
     output:
         bam="output/short_merge_srt_3.bam",
         bai="output/short_merge_srt_3.bam.bai"
+    threads:
+        config["threads"]
     conda:
         'envs/bwa.yaml'
     shell:
@@ -79,6 +89,8 @@ rule pilon_polish_3:
         bam = 'output/short_merge_srt_3.bam'
     output:
         "output/merge_pilon_corrected_3.fasta"
+    threads:
+        1
     params:
         output_prefix = 'merge_pilon_corrected_3',
         output_dir = 'output'
@@ -94,6 +106,8 @@ rule bwa_4:
     output:
         bam="output/short_merge_srt_4.bam",
         bai="output/short_merge_srt_4.bam.bai"
+    threads:
+        config["threads"]
     conda:
         'envs/bwa.yaml'
     shell:
@@ -109,6 +123,8 @@ rule pilon_polish_4:
         bam = 'output/short_merge_srt_4.bam'
     output:
         "output/merge_corrected_4.fasta"
+    threads:
+        1
     params:
         output_prefix = 'merge_corrected_4',
         output_dir = 'output'

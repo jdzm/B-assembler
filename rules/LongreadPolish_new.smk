@@ -12,6 +12,8 @@ rule polish_round1:
         read=config['longread']
     output:
         "output/polished_1.fasta"
+    threads:
+        config["threads"]
     params:
         dir="output/",
         type=par
@@ -26,6 +28,8 @@ rule rename:
         "output/polished_1.fasta"
     output:
         "output/B_assembly.fasta"
+    threads:
+        1
     shell:
         """
         mv {input} {output}

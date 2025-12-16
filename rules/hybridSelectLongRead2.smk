@@ -3,6 +3,8 @@ rule longread_len:
         config['longread']
     output:
         "output/read_len_distrbution_2.txt"
+    threads:
+        1
     shell:
         """
         python scripts/ReadLengthDistribution.py {input} {output}
@@ -14,6 +16,8 @@ rule select_longread:
     output:
         long="output/filter_length.fq",
         short="output/left_filter_length.fq"
+    threads:
+        1
     params:
         config['genomesize']
     shell:
@@ -23,6 +27,8 @@ rule select_longread:
 rule fq_to_fa:
     input:
         "output/filter_length.fq"
+    threads:
+        1
     output:
         "output/filter_length.fa"
     shell:
@@ -41,6 +47,8 @@ rule short_to_long:
     input:
         long = "output/filter_length.fa",
         short = "output/left_filter_length.fq"
+    threads:
+        config["threads"]
     output:
         "output/short_to_long.sam"
     params:
@@ -52,6 +60,8 @@ rule short_to_long:
 rule longread_polish:
     input:
         long = 'output/filter_length.fa',
+    threads:
+        1
         short = 'output/left_filter_length.fq',
         sam = 'output/short_to_long.sam'
     output:

@@ -13,6 +13,8 @@ rule first_assemble:
         "output/long_read_corrected.fasta"
     output:
         "output/assembly.fasta"
+    threads:
+        config["threads"]
     params:
         dir="output/",
         genoSize=config['genomesize'],
@@ -27,6 +29,8 @@ rule select_longestContig:
         "output/assembly.fasta"
     output:
         "output/firstrun.fa"
+    threads:
+        1
     shell:
         """
         python scripts/SelectPlasmidID_LongestContig.py {input} {output}
@@ -39,6 +43,8 @@ rule rawfq_firstrun:
     output:
         bam = "output/rawfq-firstrun-srt.bam",
         bai = "output/rawfq-firstrun-srt.bam.bai"
+    threads:
+        config["threads"]
     params:
         type=mini
     shell:

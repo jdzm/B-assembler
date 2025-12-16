@@ -12,6 +12,8 @@ rule polish_round1:
         read=config['longread']
     output:
         "output/racon_polish_1.fa"
+    threads:
+        config["threads"]
     params:
         type=par
     shell:
@@ -24,6 +26,8 @@ rule polish_round2:
         read=config['longread']
     output:
         "output/racon_polish_2.fa"
+    threads:
+        config["threads"]
     params:
         type=par
     shell:
@@ -35,6 +39,8 @@ rule polish_round3:
         read=config['longread']
     output:
         "output/racon_polish_3.fa"
+    threads:
+        config["threads"]
     params:
         type=par
     shell:
@@ -46,6 +52,8 @@ rule polish_round4:
         read=config['longread']
     output:
         "output/merge_corrected_4.fasta"
+    threads:
+        config["threads"]
     params:
         type=par
     shell:

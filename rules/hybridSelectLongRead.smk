@@ -3,6 +3,8 @@ rule longread_len:
         config['longread']
     output:
         "output/read_len_distrbution_2.txt"
+    threads:
+        1
     shell:
         "python scripts/ReadLengthDistribution.py {input} {output}"
 
@@ -13,6 +15,8 @@ rule select_longread:
     output:
         long="output/filter_length.fq",
         short="output/left_filter_length.fq"
+    threads:
+        1
     params:
         config['genomesize']
     shell:
@@ -23,6 +27,8 @@ rule select_longread:
 rule fq_to_fa:
     input:
         "output/filter_length.fq"
+    threads:
+        1
     output:
         "output/filter_length.fa"
     shell:
@@ -36,6 +42,8 @@ rule bwa:
         short_1 = config['illumina']['R1'],
         short_2 = config['illumina']['R2']
     output:
+    threads:
+        config["threads"] // 2
         bam="output/short_read_long-srt.bam",
         bai="output/short_read_long-srt.bam.bai"
     conda:
@@ -49,6 +57,8 @@ rule longread_polish:
     input:
         long = 'output/filter_length.fa',
         bam = 'output/short_read_long-srt.bam'
+    threads:
+        1
     output:
         "output/long_read_corrected.fasta"
     params:
