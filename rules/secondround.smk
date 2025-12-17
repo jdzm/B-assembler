@@ -7,6 +7,8 @@ rule endReads_select:
     output:
         end="output/EndAlign.fq",
         begin="output/beginAlign.fq"
+    threads:
+        1
     shell:
         """
         python scripts/ExtractEndReads.py {input.fa} {input.bam} {output.begin} {output.end}
@@ -18,6 +20,8 @@ rule merge_end_reads:
     output:
         Endfq="output/EndReads.fq",
         Endfa="output/EndReads.fa"
+    threads:
+        1
     shell:
         """
         cat {input} > {output.Endfq} && python scripts/FqToFa.py {output.Endfq} {output.Endfa}
@@ -25,6 +29,8 @@ rule merge_end_reads:
 rule remove_dupl:
     input:
         "output/EndReads.fa"
+    threads:
+        1
     output:
         "output/EndReads_dupl_remove.fa"
     shell:
@@ -45,19 +51,23 @@ rule second_assembly:
         "output/EndReads_dupl_remove.fa"
     output:
         "output/secondrun/assembly.fasta"
+    threads:
+        config["threads"]
     params:
         dir="output/secondrun/",
         type=par,
         size=resize
     shell:
         """
-        flye {params.type} {input} --min-overlap 3000 --genome-size {params.size} --out-dir {params.dir}
+        flye {params.type} {input} --min-overlap 3000 --genome-size {params.size} --threads {threads} --out-dir {params.dir}
         """
 rule select_longContig:
     input:
         "output/secondrun/assembly.fasta"
     output:
         "output/secondrunOneline.fa"
+    threads:
+        1
     shell:
         """
         python scripts/PrintOneLine.py {input} {output}

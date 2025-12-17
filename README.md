@@ -38,13 +38,11 @@ Reasons to __not__ use B-assembler:
 # Installation
 
 ## Install from source
-
 ```
 git clone https://github.com/huang1990/B-assembler.git; cd B-assembler;
 ```
 
 ## setup the environment
-
 ```
 conda env create -n B-assembler -f env.yaml
 conda activate B-assembler
@@ -52,8 +50,9 @@ conda activate B-assembler
 **Note** It is important that you ensure all bioconda installed tools installed.
 
 ## Write your configuation
-###Provide sequence data in config.yaml file
+### Provide sequence data in config.yaml file
 ```
+cp config-template.yaml config.yaml
 vi config.yaml
 ```
 
@@ -67,8 +66,8 @@ Replace the YAML keys as appropriate. Keys are:
 | `readtype`| ONT or pb | Type of your long reads, ONT is for nanopore, pb is for pacbio|
 
 ## Engage the pipeline
-Run the pipeline, you **must** specify `cores` to ensure that how many threads you give. 
-##Usage
+Run the pipeline, you **must** specify `cores` to ensure that how many threads you give. The max number of cores to be used is limited by the parameter `threads` inside the `config.yaml` file. Please make sure that they both match.
+## Usage
 ```
 Usage: bash run_B-assembler.sh <numCPUs> <LongReadOnly|Hybrid> [output:PWD]
 
@@ -84,11 +83,10 @@ output:
 	 output directory, current working directory by default
 
 ```
-##Examples
+## Examples
 ```
 bash run_B-assembler.sh 2 LongReadOnly
 ```
+
 # output
-
-The final assembly will be in the output directory, and the name of assembly: B-assembler.fasta
-
+The final assembly will be in the output directory, and the name of assembly: `B-assembler.fasta`

@@ -3,10 +3,13 @@ rule longread_len:
         config['longread']
     output:
         "output/read_len_distrbution_2.txt"
+    threads:
+        1
     shell:
         """
         python scripts/ReadLengthDistribution.py {input} {output}
         """
+
 rule select_longread:
     input:
         raw=config['longread'],
@@ -14,21 +17,27 @@ rule select_longread:
     output:
         long="output/filter_length.fq",
         short="output/left_filter_length.fq"
+    threads:
+        1
     params:
         config['genomesize']
     shell:
         """
         python scripts/SelectLongRead.py {input.raw} {input.lenDis} {params} {output.long} {output.short}
         """
+
 rule fq_to_fa:
     input:
         "output/filter_length.fq"
     output:
         "output/filter_length.fa"
+    threads:
+        1
     shell:
         """
         python scripts/FqToFa.py {input} {output}
         """
+
 ##longRead_correct
 par=""
 readType=config['readtype']
@@ -43,12 +52,15 @@ rule short_to_long:
         short = "output/left_filter_length.fq"
     output:
         "output/short_to_long.sam"
+    threads:
+        config["threads"]
     params:
         type=par
     shell:
         """
-        minimap2 -ax {params.type} {input.long} {input.short} > {output}
+        minimap2 -ax {params.type} -t {threads} {input.long} {input.short} > {output}
         """
+
 rule longread_polish:
     input:
         long = 'output/filter_length.fa',
@@ -56,7 +68,9 @@ rule longread_polish:
         sam = 'output/short_to_long.sam'
     output:
         "output/long_read_corrected.fasta"
+    threads:
+        config ["threads"] // 2
     shell:
         """
-        racon {input.short} {input.sam} {input.long} > {output}
+        racon --threads {threads} {input.short} {input.sam} {input.long} > {output}
         """

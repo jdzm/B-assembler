@@ -12,13 +12,14 @@ rule polish_round1:
         read=config['longread']
     output:
         "output/polished_1.fasta"
+    threads:
+        config["threads"]
     params:
         dir="output/",
         type=par
-
     shell:
         """
-        flye --polish-target {input.assembly} {params.type} {input.read} --iterations 2 --out-dir {params.dir} 
+        flye --polish-target {input.assembly} {params.type} {input.read} --iterations 2 --threads {threads} --out-dir {params.dir} 
         """
 
 rule rename:
@@ -26,6 +27,8 @@ rule rename:
         "output/polished_1.fasta"
     output:
         "output/B_assembly.fasta"
+    threads:
+        1
     shell:
         """
         mv {input} {output}

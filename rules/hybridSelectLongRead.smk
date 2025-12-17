@@ -3,6 +3,8 @@ rule longread_len:
         config['longread']
     output:
         "output/read_len_distrbution_2.txt"
+    threads:
+        1
     shell:
         "python scripts/ReadLengthDistribution.py {input} {output}"
 
@@ -13,6 +15,8 @@ rule select_longread:
     output:
         long="output/filter_length.fq",
         short="output/left_filter_length.fq"
+    threads:
+        1
     params:
         config['genomesize']
     shell:
@@ -25,6 +29,8 @@ rule fq_to_fa:
         "output/filter_length.fq"
     output:
         "output/filter_length.fa"
+    threads:
+        1
     shell:
         """
         python scripts/FqToFa.py {input} {output}
@@ -38,12 +44,20 @@ rule bwa:
     output:
         bam="output/short_read_long-srt.bam",
         bai="output/short_read_long-srt.bam.bai"
+    threads:
+        config["threads"]
     conda:
         'envs/bwa.yaml'
     shell:
-        'bwa index {input.long};'
-        'bwa mem -t 8 {input.long} {input.short_1} {input.short_2} | samtools view -Sb - |  samtools sort - -o {output.bam};'
-        'samtools index {output.bam}'
+        """
+        bwa index {input.long};
+        
+        bwa mem -t {threads} {input.long} {input.short_1} {input.short_2} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam}
+        
+        samtools index {output.bam}
+        """
 
 rule longread_polish:
     input:
@@ -51,10 +65,15 @@ rule longread_polish:
         bam = 'output/short_read_long-srt.bam'
     output:
         "output/long_read_corrected.fasta"
+    threads:
+        config ["threads"] // 2
     params:
         output_prefix = 'long_read_corrected',
         output_dir = 'output'
     shell:
         """
-        java -Xmx10G -jar script/pilon-1.23.jar --genome {input.long} --frags {input.bam} --fix all --output {params.output_prefix} --outdir {params.output_dir}
+        java -Xmx10G -jar script/pilon-1.23.jar --threads {threads} \
+            --genome {input.long} --frags {input.bam} \
+            --fix all --output {params.output_prefix} \
+            --outdir {params.output_dir}
         """

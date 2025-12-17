@@ -6,10 +6,13 @@ rule endReads_select:
     output:
         end="output/EndAlign.fq",
         begin="output/beginAlign.fq"
+    threads:
+        1
     shell:
         """
         python scripts/ExtractEndReads.py {input.fa} {input.bam} {output.begin} {output.end}
         """
+
 rule merge_end_reads:
     input:
         "output/EndAlign.fq",
@@ -17,13 +20,18 @@ rule merge_end_reads:
     output:
         Endfq="output/EndReads.fq",
         Endfa="output/EndReads.fa"
+    threads:
+        1
     shell:
         """
         cat {input} > {output.Endfq} && python scripts/FqToFa.py {output.Endfq} {output.Endfa}
         """
+
 rule remove_dupl:
     input:
         "output/EndReads.fa"
+    threads:
+        1
     output:
         "output/EndReads_dupl_remove.fa"
     shell:

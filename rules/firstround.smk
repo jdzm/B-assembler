@@ -13,13 +13,17 @@ rule first_assemble:
         "output/long_read_corrected.fasta"
     output:
         "output/assembly.fasta"
+    threads:
+        config["threads"]
     params:
         dir="output/",
         genoSize=config['genomesize'],
         type=par 
     shell:
         """
-        flye {params.type} {input} --min-overlap 3000 --genome-size {params.genoSize} --out-dir {params.dir}
+        flye {params.type} {input} --min-overlap 3000 \
+            --genome-size {params.genoSize} \
+            --threads {threads} --out-dir {params.dir}
         """
 ##extract plasmid sequence
 rule select_longestContig:
@@ -27,6 +31,8 @@ rule select_longestContig:
         "output/assembly.fasta"
     output:
         "output/firstrun.fa"
+    threads:
+        1
     shell:
         """
         python scripts/SelectPlasmidID_LongestContig.py {input} {output}
@@ -39,10 +45,16 @@ rule rawfq_firstrun:
     output:
         bam = "output/rawfq-firstrun-srt.bam",
         bai = "output/rawfq-firstrun-srt.bam.bai"
+    threads:
+        config["threads"]
     params:
         type=mini
     shell:
         """
-        minimap2 -ax {params.type} {input.firstrun} {input.rawfq} | samtools view -Sb - | samtools sort - -o {output.bam} && samtools index {output.bam} > {output.bai}
+        minimap2 -ax {params.type} -t {threads} {input.firstrun} {input.rawfq} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam} 
+            
+        samtools index {output.bam} > {output.bai}
         """
 

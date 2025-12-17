@@ -6,12 +6,18 @@ rule bwa_1:
     output:
         bam="output/short_merge_srt_1.bam",
         bai="output/short_merge_srt_1.bam.bai"
+    threads:
+        config["threads"]
     conda:
         'envs/bwa.yaml'
     shell:
         """
         bwa index {input.long};
-        bwa mem -t 8 {input.long} {input.short_1} {input.short_2} |samtools view -Sb - | samtools sort - -o {output.bam};
+        
+        bwa mem -t {threads} {input.long} {input.short_1} {input.short_2} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam}
+
         samtools index {output.bam}
         """
 
@@ -21,12 +27,17 @@ rule pilon_polish_1:
         bam = 'output/short_merge_srt_1.bam'
     output:
         "output/merge_pilon_corrected_1.fasta"
+    threads:
+        config ["threads"] // 2
     params:
         output_prefix = 'merge_pilon_corrected_1',
         output_dir = 'output'
     shell:
         """
-        java -Xmx10G -jar script/pilon-1.23.jar --genome {input.long} --frags {input.bam} --fix all --output {params.output_prefix} --outdir {params.output_dir} 
+        java -Xmx10G -jar script/pilon-1.23.jar --threads {threads} \
+            --genome {input.long} --frags {input.bam} \
+            --fix all --output {params.output_prefix} \
+            --outdir {params.output_dir} 
         """
 rule bwa_2:
     input:
@@ -36,12 +47,18 @@ rule bwa_2:
     output:
         bam="output/short_merge_srt_2.bam",
         bai="output/short_merge_srt_2.bam.bai"
+    threads:
+        config["threads"]
     conda:
         'envs/bwa.yaml'
     shell:
         """
         bwa index {input.long};
-        bwa mem -t 8 {input.long} {input.short_1} {input.short_2} |samtools view -Sb - | samtools sort - -o {output.bam};
+        
+        bwa mem -t {threads} {input.long} {input.short_1} {input.short_2} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam}
+        
         samtools index {output.bam}
         """
 rule pilon_polish_2:
@@ -50,12 +67,17 @@ rule pilon_polish_2:
         bam = 'output/short_merge_srt_2.bam'
     output:
         "output/merge_pilon_corrected_2.fasta"
+    threads:
+        config ["threads"] // 2
     params:
         output_prefix = 'merge_pilon_corrected_2',
         output_dir = 'output'
     shell:
         """
-        java -Xmx10G -jar script/pilon-1.23.jar --genome {input.long} --frags {input.bam} --fix all --output {params.output_prefix} --outdir {params.output_dir}
+        java -Xmx10G -jar script/pilon-1.23.jar --threads {threads} \
+            --genome {input.long} --frags {input.bam} \
+            --fix all --output {params.output_prefix} \
+            --outdir {params.output_dir}
         """
 rule bwa_3:
     input:
@@ -65,12 +87,18 @@ rule bwa_3:
     output:
         bam="output/short_merge_srt_3.bam",
         bai="output/short_merge_srt_3.bam.bai"
+    threads:
+        config["threads"]
     conda:
         'envs/bwa.yaml'
     shell:
         """
         bwa index {input.long};
-        bwa mem -t 8 {input.long} {input.short_1} {input.short_2} |samtools view -Sb - | samtools sort - -o {output.bam};
+        
+        bwa mem -t {threads} {input.long} {input.short_1} {input.short_2} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam}
+
         samtools index {output.bam}
         """
 rule pilon_polish_3:
@@ -79,13 +107,19 @@ rule pilon_polish_3:
         bam = 'output/short_merge_srt_3.bam'
     output:
         "output/merge_pilon_corrected_3.fasta"
+    threads:
+        1
     params:
         output_prefix = 'merge_pilon_corrected_3',
         output_dir = 'output'
     shell:
         """
-        java -Xmx10G -jar script/pilon-1.23.jar --genome {input.long} --frags {input.bam} --fix all --output {params.output_prefix} --outdir {params.output_dir}
+        java -Xmx10G -jar script/pilon-1.23.jar --threads {threads} \
+            --genome {input.long} --frags {input.bam} \
+            --fix all --output {params.output_prefix} \
+            --outdir {params.output_dir}
         """
+
 rule bwa_4:
     input:
         long = "output/merge_pilon_corrected_3.fasta",
@@ -94,14 +128,20 @@ rule bwa_4:
     output:
         bam="output/short_merge_srt_4.bam",
         bai="output/short_merge_srt_4.bam.bai"
+    threads:
+        config["threads"]
     conda:
         'envs/bwa.yaml'
     shell:
         """
         bwa index {input.long};
-        bwa mem -t 8 {input.long} {input.short_1} {input.short_2} |samtools view -Sb - | samtools sort - -o {output.bam};
+
+        bwa mem -t {threads} {input.long} {input.short_1} {input.short_2} | \
+            samtools view -@ {threads} -Sb - | \
+            samtools sort -@ {threads} - -o {output.bam}
+
         samtools index {output.bam}
-        """ 
+        """
 
 rule pilon_polish_4:
     input:
@@ -109,10 +149,15 @@ rule pilon_polish_4:
         bam = 'output/short_merge_srt_4.bam'
     output:
         "output/merge_corrected_4.fasta"
+    threads:
+        config["threads"] // 2
     params:
         output_prefix = 'merge_corrected_4',
         output_dir = 'output'
     shell:
         """
-        java -Xmx10G -jar script/pilon-1.23.jar --genome {input.long} --frags {input.bam} --fix all --output {params.output_prefix} --outdir {params.output_dir}
+        java -Xmx10G -jar script/pilon-1.23.jar --threads {threads} \
+            --genome {input.long} --frags {input.bam} \
+            --fix all --output {params.output_prefix} \
+            --outdir {params.output_dir}
         """
